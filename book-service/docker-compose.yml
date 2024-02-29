@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: "postgres:16.0"
+    restart: always
+    environment:
+      POSTGRES_DB: "book_db"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "1234"
+    ports:
+      - "54321:5432"
+  my-mongodb:
+    image: mongo:6-jammy
+    container_name: my-mongodb
+    ports:
+      - 27018:27017
+
+
