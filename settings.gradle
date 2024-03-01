@@ -1,4 +1,6 @@
 rootProject.name = 'book-lib'
 include 'book-service'
 include 'user-service'
+include 'gateway'
+include 'config-server'
 
