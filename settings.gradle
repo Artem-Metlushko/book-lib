@@ -4,4 +4,5 @@ include 'gateway'
 include 'service-registry'
 include 'book-service'
 include 'user-service'
+include 'consul'
 
