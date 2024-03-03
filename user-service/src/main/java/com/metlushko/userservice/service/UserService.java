@@ -22,14 +22,20 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public ResponseDto getUser(Long id){
+
+    public ResponseDto getUser(Long id) throws Exception {
         ResponseDto responseDto = new ResponseDto();
 
         User user = userRepository.findById(id).orElseThrow();
 
         UserDto userDto = userMapper.toUser(user);
 
-        BookDto bookDto = apiClient.getBookById(user.getId());
+        BookDto bookDto = null;
+        try {
+            bookDto = apiClient.getBookById(user.getId());
+        } catch (Exception e) {
+            throw new Exception("Failed to fetch book from the API");
+        }
 
         responseDto.setUserDto(userDto);
         responseDto.setBookDto(bookDto);
@@ -37,6 +43,10 @@ public class UserService {
         return responseDto;
 
     }
+
+
+
+
 
 
 
