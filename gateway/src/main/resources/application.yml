@@ -28,4 +28,10 @@ spring:
           uri: lb://book-service
           predicates:
             - Path=/api/v1/books/**
+        - id: auth-server
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/auth/**
 
+jwt:
+  secret: VHKJMNnbfhbsjkdbVJHVkhbJBKJBsmfnbngygiyguFYVHJbkjnjnsjdnlkfn

@@ -5,4 +5,5 @@ include 'service-registry'
 include 'book-service'
 include 'user-service'
 include 'consul'
+include 'auth-service'
 

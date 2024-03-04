@@ -1,3 +1,4 @@
+/*
 package com.metlushko.gateway.circuitbreaker;
 
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
@@ -30,3 +31,4 @@ public class Resilience4JConfiguration {
                 .build());
     }
 }
+*/
