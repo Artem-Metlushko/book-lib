@@ -20,18 +20,27 @@ spring:
           predicates:
             - Path=/api/v1/users/**
           filters:
+            - name:
+            - AuthFilter
+
             - name: CircuitBreaker
               args:
                 name: userServiceCB
                 fallbackUri: forward:/fallback/user-service
+
         - id: book-service
           uri: lb://book-service
           predicates:
             - Path=/api/v1/books/**
+          filters:
+            - AuthFilter
+
         - id: auth-server
           uri: lb://auth-service
           predicates:
             - Path=/api/auth/**
-
+          filters:
+            - AuthFilter
 jwt:
-  secret: VHKJMNnbfhbsjkdbVJHVkhbJBKJBsmfnbngygiyguFYVHJbkjnjnsjdnlkfn
+  secret: AvHGRK8C0ia4uOuxxqPD5DTbWC9F9TWvPStp3pb7ARo0oK2mJ3pd3YG4lxA9i8bj6OTbadweheufHNyG
+

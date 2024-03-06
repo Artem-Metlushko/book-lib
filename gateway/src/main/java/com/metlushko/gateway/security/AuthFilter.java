@@ -1,68 +1,50 @@
 package com.metlushko.gateway.security;
 
-import io.jsonwebtoken.Claims;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.cloud.gateway.filter.GatewayFilter;
-import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.stereotype.Component;
-import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Mono;
-@RefreshScope
-@Component
-public class AuthFilter implements GatewayFilter {
 
-    private final RouterValidator routerValidator;
+import org.springframework.cloud.gateway.filter.GatewayFilter;
+import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Component;
+
+
+@Component
+public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> {
+
+    private final RouterValidator validator;
     private final JwtUtil jwtUtil;
 
-    @Autowired
-    public AuthFilter(RouterValidator routerValidator, JwtUtil jwtUtil) {
-        this.routerValidator = routerValidator;
+    public AuthFilter(RouterValidator validator, JwtUtil jwtUtil) {
+        super(Config.class);
+        this.validator = validator;
         this.jwtUtil = jwtUtil;
     }
 
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        ServerHttpRequest request = exchange.getRequest();
+    public GatewayFilter apply(Config config) {
+        return ((exchange, chain) -> {
+            if (validator.isSecured.test(exchange.getRequest())) {
+                //header contains token or not
+                if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
+                    throw new RuntimeException("missing authorization header");
+                }
 
-        if (routerValidator.isSecured.test(request)) {
-            if (this.isAuthMissing(request)) {
-                return this.onError(exchange, HttpStatus.UNAUTHORIZED);
+                String authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+                if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                    authHeader = authHeader.substring(7);
+                }
+                try {
+                    jwtUtil.validateToken(authHeader);
+
+                } catch (Exception e) {
+                    System.out.println("invalid access...!");
+                    throw new RuntimeException("un authorized access to application");
+                }
             }
-
-            final String token = this.getAuthHeader(request);
-
-            if (jwtUtil.isInvalid(token)) {
-                return this.onError(exchange, HttpStatus.FORBIDDEN);
-            }
-
-            this.updateRequest(exchange, token);
-        }
-        return chain.filter(exchange);
+            return chain.filter(exchange);
+        });
     }
 
-    private Mono<Void> onError(ServerWebExchange exchange, HttpStatus httpStatus) {
-        ServerHttpResponse response = exchange.getResponse();
-        response.setStatusCode(httpStatus);
-        return response.setComplete();
-    }
+    public static class Config {
 
-    private String getAuthHeader(ServerHttpRequest request) {
-        return request.getHeaders().getOrEmpty("Authorization").get(0);
-    }
-
-    private boolean isAuthMissing(ServerHttpRequest request) {
-        return !request.getHeaders().containsKey("Authorization");
-    }
-
-    private void updateRequest(ServerWebExchange exchange, String token) {
-        Claims claims = jwtUtil.getAllClaimsFromToken(token);
-        exchange.getRequest().mutate()
-                .header("email", String.valueOf(claims.get("email")))
-                .build();
     }
 }
-
