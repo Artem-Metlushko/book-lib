@@ -8,6 +8,16 @@ services:
 #    networks:
 #      book-lib-net:
 
+  gateway:
+    container_name: gateway
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    restart: on-failure
+    ports:
+      - "9191:9191"
+    networks:
+      book-lib-net:
 
   consul:
     image: consul:1.11.11
@@ -44,6 +54,33 @@ services:
     #      - "54321:5432"
     networks:
       book-lib-net:
+
+  user-service:
+    container_name: user-service
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    depends_on:
+      - postgresql_user_db
+    restart: on-failure
+    ports:
+      - "1000:1000"
+    networks:
+      book-lib-net:
+
+  postgresql_user_db:
+    container_name: postgresql_user_db
+    image: postgres
+    restart: on-failure
+    environment:
+      POSTGRES_DB: "user_db"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "1234"
+    #    ports:
+    #      - "54321:5432"
+    networks:
+      book-lib-net:
+
 
   mongo_db:
     container_name: mongo_db

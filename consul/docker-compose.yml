@@ -4,5 +4,5 @@ services:
     container_name: consul-server1
     restart: always
     ports:
-      - "8500:8500"
+      - "8501:8500"
 
