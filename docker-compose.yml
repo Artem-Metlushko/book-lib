@@ -1,8 +1,27 @@
 services:
+#  config-server:
+#    build: config-server
+#    container_name: config_server
+##    restart: always
+#    ports:
+#      - "8888:8888"
+#    networks:
+#      book-lib-net:
+
+
+  consul:
+    image: consul:1.11.11
+    container_name: consul
+    restart: on-failure
+    ports:
+      - "8500:8500"
+    networks:
+      book-lib-net:
+
   book-service:
     container_name: book-service
     build:
-      context: ./
+      context: ./book-service
       dockerfile: Dockerfile
     depends_on:
       - postgres_db
@@ -21,18 +40,20 @@ services:
       POSTGRES_DB: "book_db"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "1234"
-#    ports:
-#      - "54321:5432"
+    #    ports:
+    #      - "54321:5432"
     networks:
       book-lib-net:
 
   mongo_db:
     container_name: mongo_db
     image: mongo
-#    ports:
-#      - 27018:27017
+    #    ports:
+    #      - 27018:27017
     networks:
       book-lib-net:
 
 networks:
   book-lib-net:
+
+
