@@ -1,0 +1,111 @@
+services:
+
+  gateway:
+    container_name: gateway
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    depends_on:
+      - auth-service
+    restart: on-failure
+    ports:
+      - "9191:9191"
+    networks:
+      book-lib-net:
+
+  consul:
+    image: consul:1.11.11
+    container_name: consul
+    restart: on-failure
+    ports:
+      - "8500:8500"
+    networks:
+      book-lib-net:
+
+  config-server:
+    build:
+      context: ./config-server
+      dockerfile: Dockerfile
+    container_name: config-server
+    restart: on-failure
+#    ports:
+#      - "8888:8888"
+    networks:
+      book-lib-net:
+
+  auth-service:
+    container_name: auth-service
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    restart: on-failure
+#    ports:
+#      - "6000:6000"
+    networks:
+      book-lib-net:
+
+  book-service:
+    container_name: book-service
+    build:
+      context: ./book-service
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres_db
+      - mongo_db
+    restart: on-failure
+#    ports:
+#      - "7000:7000"
+    networks:
+      book-lib-net:
+
+  user-service:
+    container_name: user-service
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    depends_on:
+      - postgresql_user_db
+    restart: on-failure
+#    ports:
+#      - "1000:1000"
+    networks:
+      book-lib-net:
+
+  postgres_db:
+    container_name: postgres_db
+    image: postgres
+    restart: on-failure
+    environment:
+      POSTGRES_DB: "book_db"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "1234"
+    #    ports:
+    #      - "54321:5432"
+    networks:
+      book-lib-net:
+
+  postgresql_user_db:
+    container_name: postgresql_user_db
+    image: postgres
+    restart: on-failure
+    environment:
+      POSTGRES_DB: "user_db"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "1234"
+    #    ports:
+    #      - "54321:5432"
+    networks:
+      book-lib-net:
+
+  mongo_db:
+    container_name: mongo_db
+    image: mongo
+    #    ports:
+    #      - 27018:27017
+    networks:
+      book-lib-net:
+
+networks:
+  book-lib-net:
+
+
