@@ -1,38 +1,40 @@
 services:
-  book-service:
-    container_name: book-service
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    depends_on:
-      - postgres_db
-      - mongo_db
-    restart: on-failure
-    ports:
-      - "7000:7000"
-    networks:
-      book-lib-net:
+#  book-service:
+#    container_name: book-service
+#    build:
+#      context: ./
+#      dockerfile: Dockerfile
+#    depends_on:
+#      - postgres_db
+#      - mongo_db
+#    restart: on-failure
+#    ports:
+#      - "7000:7000"
+#    networks:
+#      book-lib-net:
 
   postgres_db:
-    container_name: postgres_db
+#    container_name: postgres_db
+    container_name: postgres_loc_db
     image: postgres
     restart: on-failure
     environment:
       POSTGRES_DB: "book_db"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "1234"
-#    ports:
-#      - "54321:5432"
-    networks:
-      book-lib-net:
+    ports:
+      - "54329:5432"
+#    networks:
+#      book-lib-net:
 
   mongo_db:
-    container_name: mongo_db
+#    container_name: mongo_db
+    container_name: mongo_loc_db
     image: mongo
-#    ports:
-#      - 27018:27017
-    networks:
-      book-lib-net:
-
-networks:
-  book-lib-net:
+    ports:
+      - 27019:27017
+#    networks:
+#      book-lib-net:
+#
+#networks:
+#  book-lib-net:

@@ -1,9 +1,9 @@
-package com.metlushko.userservice.dto;
+package com.metlushko.mail.entity;
 
 import lombok.*;
 
-@Setter
 @Data
+@Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,6 +14,4 @@ public class UserDto {
     private String password;
 
     private String email;
-
-
 }
