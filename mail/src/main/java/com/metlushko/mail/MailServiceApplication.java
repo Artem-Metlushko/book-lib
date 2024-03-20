@@ -1,13 +1,14 @@
-package com.metlushko.consul;
+package com.metlushko.mail;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+
 @SpringBootApplication
-public class ConsulApplication {
+public class MailServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ConsulApplication.class, args);
+		SpringApplication.run(MailServiceApplication.class, args);
 	}
 
 }

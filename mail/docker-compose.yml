@@ -3,12 +3,11 @@ services:
     image: "postgres"
     restart: always
     environment:
-      POSTGRES_DB: "user_db"
+      POSTGRES_DB: "email_db"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "1234"
     ports:
-      - "54321:5432"
-
+      - "54325:5432"
 
 
 
