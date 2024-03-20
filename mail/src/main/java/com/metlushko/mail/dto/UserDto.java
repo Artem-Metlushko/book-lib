@@ -1,13 +1,14 @@
-package com.metlushko.mail.entity;
+package com.metlushko.mail.dto;
 
 import lombok.*;
+
 
 @Data
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class UserDto  {
 
     private String username;
 

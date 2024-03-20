@@ -14,8 +14,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
 
-//    @Value("${spring.kafka.topic.userCreated}")
-//    private String USER_CREATED_TOPIC;
     private final ApiClient apiClient;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -25,8 +23,6 @@ public class UserService {
     public User saveUser(User user) {
         User createdUser = userRepository.save(user);
         UserDto userDto = userMapper.toUser(createdUser);
-//        kafkaProducerService.send(USER_CREATED_TOPIC, createdUser);
-//        producerService.sendStringMessage(String.valueOf(createdUser));;
         producerService.sendJsonObject(userDto);
 
         return createdUser;

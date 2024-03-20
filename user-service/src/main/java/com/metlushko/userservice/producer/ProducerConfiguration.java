@@ -20,33 +20,16 @@ public class ProducerConfiguration {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-    //    @Bean
-//    public ProducerFactory<String, User>  producerConfigs() {
-//        Map<String, Object> props = new HashMap<>();
-//        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-//        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-//        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-//
-//        return new DefaultKafkaProducerFactory<String, User>(props);
-//    }
-//
-//    @Bean
-//    public ProducerFactory<String, User> producerFactory() {
-//        return new DefaultKafkaProducerFactory<>(producerConfigs());
-//    }
-//
-//    @Bean
-//    public KafkaTemplate<String, User> kafkaTemplate() {
-//        return new KafkaTemplate<>(producerFactory());
-//    }
+
     @Bean
     public ProducerFactory<String, UserDto> jsonProducerFactory() {
 
         Map<String, Object> config = new HashMap<>();
 
-        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
+        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        config.put(JsonSerializer.TYPE_MAPPINGS, "userDto:" + UserDto.class.getName());
         return new DefaultKafkaProducerFactory<>(config);
     }
 
