@@ -1,0 +1,29 @@
+server:
+  port: 7000
+
+#    username: ${DB_USERNAME}
+#    password: ${DB_PASSWORD}
+#      url:  jdbc:postgresql://localhost:5432/book_db
+
+spring:
+  datasource:
+    url:  jdbc:postgresql://${DATASOURCE_HOST:localhost}:5432/book_db
+    username: postgres
+    password: 1234
+  data:
+    mongodb:
+      host: ${DATASOURCE_HOST:localhost}
+      port: 27017
+      database: Book
+  servlet:
+    multipart:
+      max-file-size: 2024MB
+      max-request-size: 2024MB
+      enabled: true
+  application:
+    name: book-service
+
+#management:
+#    jmx:
+#      exposure:
+#        include: *

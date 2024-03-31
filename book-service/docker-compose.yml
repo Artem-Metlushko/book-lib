@@ -23,16 +23,15 @@ services:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "1234"
     ports:
-      - "54329:5432"
+      - "5432:5432"
 #    networks:
 #      book-lib-net:
 
   mongo_db:
-#    container_name: mongo_db
     container_name: mongo_loc_db
     image: mongo
     ports:
-      - 27019:27017
+      - 27017:27017
 #    networks:
 #      book-lib-net:
 #

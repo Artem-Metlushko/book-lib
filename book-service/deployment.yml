@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind : Deployment
+metadata:
+  name: book-service-dep
+spec:
+  selector:
+    matchLabels:
+      app: book-service-dep
+  template:
+    metadata:
+      labels:
+        app: book-service-dep
+    spec:
+      containers:
+        - name: book-service-dep
+          image: artemmetlushko/book-service
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "250m" #1/4 core
+          ports:
+          - containerPort: 7000
+
