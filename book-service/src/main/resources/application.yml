@@ -7,12 +7,12 @@ server:
 
 spring:
   datasource:
-    url:  jdbc:postgresql://${DATASOURCE_HOST:localhost}:5432/book_db
+    url:  jdbc:postgresql://localhost:5432/book_db
     username: postgres
     password: 1234
   data:
     mongodb:
-      host: ${DATASOURCE_HOST:localhost}
+      host: localhost
       port: 27017
       database: Book
   servlet:

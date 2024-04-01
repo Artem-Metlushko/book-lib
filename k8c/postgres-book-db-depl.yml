@@ -2,26 +2,26 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgres-book
+  name: postgres
   labels:
-    app: postgres-book
-    tier: postgres-book-db
+    app: postgres
+    tier: database
 spec:
   ports:
     - port: 5432
   selector:
-    app: postgres-book
-    tier: postgres-book-db
+    app: postgres
+    tier: database
   clusterIP: None
 
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: postgres-book-claim
+  name: postgres-pv-claim
   labels:
-    app: postgres-book
-    tier: postgres-book-db
+    app: postgres
+    tier: database
 spec:
   accessModes:
     - ReadWriteOnce
@@ -32,26 +32,26 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres-book
+  name: postgres
   labels:
-    app: postgres-book
-    tier: postgres-book-db
+    app: postgres
+    tier: database
 
 spec:
   selector:
     matchLabels:
-      app: postgres-book
+      app: postgres
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: postgres-book
-        tier: postgres-book-db
+        app: postgres
+        tier: database
 
     spec:
       containers:
-        - name: postgres-book
+        - name: postgres
           image: postgres:16.2
           imagePullPolicy: "IfNotPresent"
           env:
@@ -63,11 +63,11 @@ spec:
               value: qwerty
           ports:
             - containerPort: 5432
-              name: postgres-book
+              name: postgres
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
-              name: postgres-book-persistance
+              name: postgres-persistance-storage
       volumes:
-        - name: postgres-book-persistance
+        - name: postgres-persistance-storage
           persistentVolumeClaim:
-            claimName: postgres-book-claim
+            claimName: postgres-pv-claim
