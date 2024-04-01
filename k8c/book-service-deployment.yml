@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: book-service
+  labels:
+    name: book-service
+spec:
+  ports:
+    - nodePort: 30163
+      port: 8080
+      targetPort: 3333
+      protocol: TCP
+  selector:
+    app: book-service
+  type: NodePort
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book-service
+spec:
+  selector:
+    matchLabels:
+      app: book-service
+  template:
+    metadata:
+      labels:
+        app: book-service
+    spec:
+      containers:
+        - name: book-service
+          image: amtlh/book-service:1.0.0
+          ports:
+            - containerPort: 6666
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-configmap
+                  key: host
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-configmap
+                  key: name-db
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: postgres_user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: postgres_password

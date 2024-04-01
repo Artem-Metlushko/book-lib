@@ -5,23 +5,23 @@ metadata:
   name: postgres-book
   labels:
     app: postgres-book
-    tier: postgres-book-db
+    tier: database-book
 spec:
   ports:
     - port: 5432
   selector:
     app: postgres-book
-    tier: postgres-book-db
+    tier: database-book
   clusterIP: None
 
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: postgres-book-claim
+  name: postgres-pv-claim-book
   labels:
     app: postgres-book
-    tier: postgres-book-db
+    tier: database-book
 spec:
   accessModes:
     - ReadWriteOnce
@@ -35,7 +35,7 @@ metadata:
   name: postgres-book
   labels:
     app: postgres-book
-    tier: postgres-book-db
+    tier: database-book
 
 spec:
   selector:
@@ -47,27 +47,36 @@ spec:
     metadata:
       labels:
         app: postgres-book
-        tier: postgres-book-db
+        tier: database-book
 
     spec:
       containers:
-        - name: postgres-book
+        - name: postgres
           image: postgres:16.2
           imagePullPolicy: "IfNotPresent"
           env:
-            - name: POSTGRES_DB
-              value: book_db
             - name: POSTGRES_USER
-              value: postuser
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: postgres_user
             - name: POSTGRES_PASSWORD
-              value: qwerty
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: postgres_password
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-configmap
+                  key: name-db
           ports:
             - containerPort: 5432
               name: postgres-book
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
-              name: postgres-book-persistance
+              name: postgres-persistance-book
       volumes:
-        - name: postgres-book-persistance
+        - name: postgres-persistance-book
           persistentVolumeClaim:
-            claimName: postgres-book-claim
+            claimName: postgres-pv-claim-book
