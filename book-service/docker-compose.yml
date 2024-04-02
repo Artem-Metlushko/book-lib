@@ -16,12 +16,12 @@ services:
   postgres_db:
 #    container_name: postgres_db
     container_name: postgres_loc_db
-    image: postgres
+    image: postgres:16/
     restart: on-failure
     environment:
       POSTGRES_DB: "book_db"
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "1234"
+      POSTGRES_USER: "postuser"
+      POSTGRES_PASSWORD: "qwerty"
     ports:
       - "5432:5432"
 #    networks:

@@ -31,8 +31,9 @@ spec:
       containers:
         - name: book-service
           image: amtlh/book-service:1.0.0
+          imagePullPolicy: "IfNotPresent"
           ports:
-            - containerPort: 6666
+            - containerPort: 7000
           env:
             - name: DB_HOST
               valueFrom:
@@ -54,3 +55,13 @@ spec:
                 secretKeyRef:
                   name: postgres-credentials
                   key: postgres_password
+            - name: MONGO_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: mongo-img-db-config
+                  key: database
+            - name: MONGO_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: mongo-img-db-config
+                  key: host

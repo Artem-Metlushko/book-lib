@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-img-db-config
+data:
+  host: mongo-img-service
+  database: Book
