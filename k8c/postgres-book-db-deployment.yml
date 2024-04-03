@@ -68,8 +68,8 @@ spec:
             - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
-                  name: postgres-configmap
-                  key: name-db
+                  name: configmap
+                  key: book-postgres-db-name
           ports:
             - containerPort: 5432
               name: postgres-book

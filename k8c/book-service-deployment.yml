@@ -38,13 +38,13 @@ spec:
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: postgres-configmap
-                  key: host
+                  name: configmap
+                  key: book-postgres-db-host
             - name: DB_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: postgres-configmap
-                  key: name-db
+                  name: configmap
+                  key: book-postgres-db-name
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
@@ -58,10 +58,10 @@ spec:
             - name: MONGO_DB
               valueFrom:
                 configMapKeyRef:
-                  name: mongo-img-db-config
-                  key: database
+                  name: configmap
+                  key: book-mongo-db-name
             - name: MONGO_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: mongo-img-db-config
-                  key: host
+                  name: configmap
+                  key: book-mongo-db-host
