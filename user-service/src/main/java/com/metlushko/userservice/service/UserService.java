@@ -5,7 +5,6 @@ import com.metlushko.userservice.dto.ResponseDto;
 import com.metlushko.userservice.dto.UserDto;
 import com.metlushko.userservice.entity.User;
 import com.metlushko.userservice.mapper.UserMapper;
-import com.metlushko.userservice.producer.ProducerService;
 import com.metlushko.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,12 +17,12 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    private final ProducerService producerService;
+//    private final ProducerService producerService;
 
     public User saveUser(User user) {
         User createdUser = userRepository.save(user);
         UserDto userDto = userMapper.toUser(createdUser);
-        producerService.sendJsonObject(userDto);
+//        producerService.sendJsonObject(userDto);
 
         return createdUser;
     }

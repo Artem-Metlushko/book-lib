@@ -41,16 +41,6 @@ spec:
               value: "$(CONSUL_SERVER_SVC_SERVICE_HOST)"
             - name: POSTGRES_USER
               valueFrom:
-                configMapKeyRef:
-                  name: configmap
-                  key: user-postgres-db-host
-            - name: POSTGRES_USER_DB_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: configmap
-                  key: user-postgres-db-name
-            - name: POSTGRES_USER
-              valueFrom:
                 secretKeyRef:
                   name: postgres-credentials
                   key: postgres_user
@@ -59,13 +49,14 @@ spec:
                 secretKeyRef:
                   name: postgres-credentials
                   key: postgres_password
-            - name: DISCOVERY_SERVICE_HOST
+            - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
                   name: configmap
-                  key: discovery-service-host
-            - name: DISCOVERY_SERVICE_URL
+                  key: user-postgres-db-name
+            - name: POSTGRES_USER_HOST
               valueFrom:
                 configMapKeyRef:
                   name: configmap
-                  key: discovery-service-port
+                  key: user-postgres-db-host
+

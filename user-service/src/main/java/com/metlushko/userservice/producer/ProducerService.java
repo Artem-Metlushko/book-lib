@@ -1,3 +1,4 @@
+/*
 package com.metlushko.userservice.producer;
 
 import com.metlushko.userservice.dto.UserDto;
@@ -28,3 +29,4 @@ public class ProducerService {
         kafkaJSONTemplate.send(topic, userDto);
     }
 }
+*/

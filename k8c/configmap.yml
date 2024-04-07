@@ -9,7 +9,7 @@ data:
   book-mongo-db-name: Book
   discovery-service-host: consul-service
   discovery-service-port: "8500"
-  user-postgres-db-host: postgres-user
+  user-postgres-db-host: postgres-userdb
   user-postgres-db-name: userdb_db
 
 
