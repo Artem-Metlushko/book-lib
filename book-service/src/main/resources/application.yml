@@ -1,11 +1,9 @@
 server:
   port: 7000
 
-#    username: ${DB_USERNAME}
-#    password: ${DB_PASSWORD}
-#      url:  jdbc:postgresql://localhost:5432/book_db
-
 spring:
+  application:
+    name: book-service
   datasource:
     url: jdbc:postgresql://${DB_HOST}:5432/${DB_NAME}
     username: ${POSTGRES_USER}
@@ -15,13 +13,30 @@ spring:
       host: ${MONGO_HOST}
       port: 27017
       database: ${MONGO_DB}
+#  cloud:
+#    consul:
+#      discovery:
+#        instance-id: ${spring.application.name}:${random.value}
+#        prefer-ip-address: true
+#      config:
+#        enabled: true
+#      host: ${DISCOVERY_SERVICE_HOST}
+#      port: ${DISCOVERY_SERVICE_PORT}
+  cloud:
+    consul:
+      host: 127.0.0.1
+      discovery:
+#        instanceId: "${spring.application.name}-${server.port}-${spring.cloud.client.ip-address}"
+        instanceId: ${spring.application.name}-${server.port}
+        prefer-ip-address: true
+        health-check-critical-timeout: "1m"
+      config:
+        enabled: false
   servlet:
     multipart:
       max-file-size: 2024MB
       max-request-size: 2024MB
       enabled: true
-  application:
-    name: book-service
   jpa:
     properties:
       hibernate:
@@ -29,7 +44,14 @@ spring:
     hibernate:
       ddl-auto: update
 
-#management:
-#    jmx:
-#      exposure:
-#        include: *
+management:
+    endpoints:
+      web:
+        exposure:
+          include: "*"
+      jmx:
+        exposure:
+          include: "*"
+    endpoint:
+      health:
+        show-details: always

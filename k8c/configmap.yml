@@ -7,3 +7,6 @@ data:
   book-postgres-db-name: book_db
   book-mongo-db-host: mongo-img-service
   book-mongo-db-name: Book
+  discovery-service-host: consul-service
+  discovery-service-port: "8500"
+

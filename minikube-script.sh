@@ -3,6 +3,7 @@ kubectl apply -f ./k8c/configmap.yml
 
 kubectl delete secret postgres-credentials
 kubectl apply -f ./k8c/postgres-credentials.yml
+#minikube image load consul:1.11.11
 
 #book-service
   #postgers-book
@@ -23,6 +24,11 @@ kubectl delete svc book-service
 minikube image rm amtlh/book-service:1.0.0 --force
 minikube image load amtlh/book-service:1.0.0
 kubectl apply -f ./k8c/book-service-deployment.yml
+
+#consul
+kubectl delete deployment consul-server
+kubectl apply -f ./k8c/consul-server.yaml
+
 
 kubectl get all
 minikube dashboard

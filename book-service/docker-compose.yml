@@ -16,7 +16,7 @@ services:
   postgres_db:
 #    container_name: postgres_db
     container_name: postgres_loc_db
-    image: postgres:16/
+    image: postgres
     restart: on-failure
     environment:
       POSTGRES_DB: "book_db"
