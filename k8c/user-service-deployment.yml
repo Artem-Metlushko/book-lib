@@ -1,56 +1,54 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: book-service
+  name: user-service
   namespace: default
   labels:
-    name: book-service
+    name: user-service
 spec:
   ports:
-    - nodePort: 30163
-      port: 8080
-      targetPort: 7000
+    - nodePort: 30164
+      port: 8082
+      targetPort: 1000
       protocol: TCP
   selector:
-    app: book-service
+    app: user-service
   type: NodePort
 ---
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: book-service
+  name: user-service
   namespace: default
 spec:
   selector:
     matchLabels:
-      app: book-service
+      app: user-service
   template:
     metadata:
       labels:
-        app: book-service
-#      annotations:
-#        'consul.hashicorp.com/connect-inject': 'true'
+        app: user-service
     spec:
       containers:
-        - name: book-service
-          image: amtlh/book-service:1.0.0
+        - name: user-service
+          image: amtlh/user-service:1.0.0
           imagePullPolicy: "IfNotPresent"
           ports:
-            - containerPort: 7000
+            - containerPort: 1000
           env:
             - name: spring.cloud.consul.host
               value: "$(CONSUL_SERVER_SVC_SERVICE_HOST)"
-            - name: DB_HOST
+            - name: POSTGRES_USER
               valueFrom:
                 configMapKeyRef:
                   name: configmap
-                  key: book-postgres-db-host
-            - name: DB_NAME
+                  key: user-postgres-db-host
+            - name: POSTGRES_USER_DB_NAME
               valueFrom:
                 configMapKeyRef:
                   name: configmap
-                  key: book-postgres-db-name
+                  key: user-postgres-db-name
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
@@ -61,16 +59,6 @@ spec:
                 secretKeyRef:
                   name: postgres-credentials
                   key: postgres_password
-            - name: MONGO_DB
-              valueFrom:
-                configMapKeyRef:
-                  name: configmap
-                  key: book-mongo-db-name
-            - name: MONGO_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: configmap
-                  key: book-mongo-db-host
             - name: DISCOVERY_SERVICE_HOST
               valueFrom:
                 configMapKeyRef:

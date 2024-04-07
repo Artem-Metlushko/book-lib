@@ -1,0 +1,45 @@
+server:
+  port: 1000
+
+spring:
+  application:
+    name: book-service
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_USER_HOST}:5432/${POSTGRES_USER_DB_NAME}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+  cloud:
+    consul:
+      host: 127.0.0.1
+      discovery:
+#        instanceId: "${spring.application.name}-${server.port}-${spring.cloud.client.ip-address}"
+        instanceId: ${spring.application.name}-${server.port}
+        prefer-ip-address: true
+        health-check-critical-timeout: "1m"
+      config:
+        enabled: false
+#  kafka:
+#    bootstrap-servers: 127.0.0.1:19092
+#    consumer:
+#      group-id: mail-task
+#    template:
+#      default-topic: USER_CREATED_TOPIC
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+    jmx:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+
