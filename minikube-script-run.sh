@@ -1,9 +1,9 @@
 alias k='kubectl'
-#kubectl delete configmap configmap
-#kubectl apply -f ./k8c/configmap.yml
+kubectl delete configmap configmap
+kubectl apply -f ./k8c/configmap.yml
 #
-#kubectl delete secret postgres-credentials
-#kubectl apply -f ./k8c/postgres-credentials.yml
+kubectl delete secret postgres-credentials
+kubectl apply -f ./k8c/postgres-credentials.yml
 #minikube image load consul:1.11.11
 
 ##book-service
