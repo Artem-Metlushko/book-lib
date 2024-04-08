@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+  namespace: default
+  labels:
+    name: auth-service
+spec:
+  ports:
+    - nodePort: 30166
+      port: 9191
+      targetPort: 6000
+      protocol: TCP
+  selector:
+    app: auth-service
+  type: NodePort
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: auth-service
+  template:
+    metadata:
+      labels:
+        app: auth-service
+    spec:
+      containers:
+        - name: user-service
+          image: amtlh/auth-service:1.0.0
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 1000
+          env:
+            - name: spring.cloud.consul.host
+              value: "$(CONSUL_SERVER_SVC_SERVICE_HOST)"
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: postgres_user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: postgres_password
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: user-postgres-db-name
+            - name: POSTGRES_USER_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: user-postgres-db-host
+

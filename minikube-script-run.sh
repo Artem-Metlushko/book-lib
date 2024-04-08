@@ -37,8 +37,6 @@ minikube image load amtlh/book-service:1.0.0
 minikube image ls
 kubectl apply -f ./k8c/book-service-deployment.yml
 
-
-
 #user-service
   #postgers-user
 kubectl delete deploy postgres-userdb
