@@ -24,12 +24,12 @@ spring:
         health-check-critical-timeout: "1m"
       config:
         enabled: false
-#  kafka:
-#    bootstrap-servers: 127.0.0.1:19092
-#    consumer:
-#      group-id: mail-task
-#    template:
-#      default-topic: USER_CREATED_TOPIC
+  kafka:
+    bootstrap-servers: kafka-service:9092
+    consumer:
+      group-id: mail-task
+    topic:
+      userCreated: USER_CREATED_TOPIC
 
 management:
   endpoints:

@@ -1,4 +1,3 @@
-/*
 package com.metlushko.userservice.producer;
 
 import com.metlushko.userservice.dto.UserDto;
@@ -21,7 +20,6 @@ public class ProducerConfiguration {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-
     @Bean
     public ProducerFactory<String, UserDto> jsonProducerFactory() {
 
@@ -40,4 +38,3 @@ public class ProducerConfiguration {
     }
 
 }
-*/
