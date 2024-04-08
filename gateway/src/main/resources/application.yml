@@ -1,23 +1,23 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: configmap
-data:
-  book-postgres-db-host: postgres-book
-  book-postgres-db-name: book_db
-  book-mongo-db-host: mongo-img-service
-  book-mongo-db-name: Book
-  discovery-service-host: consul-service
-  discovery-service-port: "8500"
-  user-postgres-db-host: postgres-userdb
-  user-postgres-db-name: userdb_db
-  application.yml: |-
-    spring:
-      cloud:
-        gateway:
-          discovery:
-            locator:
-              enabled: true
+server:
+  port: 9191
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    consul:
+      host: 127.0.0.1
+      discovery:
+        #        instanceId: "${spring.application.name}-${server.port}-${spring.cloud.client.ip-address}"
+        instanceId: ${spring.application.name}-${server.port}
+        prefer-ip-address: true
+        health-check-critical-timeout: "1m"
+      config:
+        enabled: false
+    gateway:
+      discovery:
+        locator:
+          enabled: true
       routes:
         - id: user-service
           uri: lb://user-service
@@ -45,5 +45,5 @@ data:
             - Path=/api/auth/**
           filters:
             - AuthFilter
-
-
+jwt:
+  secret: AvHGRK8C0ia4uOuxxqPD5DTbWC9F9TWvPStp3pb7ARo0oK2mJ3pd3YG4lxA9i8bj6OTbadweheufHNyG
