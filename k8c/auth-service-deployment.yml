@@ -7,13 +7,13 @@ metadata:
     name: auth-service
 spec:
   ports:
-    - nodePort: 30166
-      port: 9191
+#    - nodePort: 30166
+    - protocol: TCP
+      name: http-traffic
+      port: 6000
       targetPort: 6000
-      protocol: TCP
   selector:
     app: auth-service
-  type: NodePort
 ---
 
 apiVersion: apps/v1
@@ -29,13 +29,17 @@ spec:
     metadata:
       labels:
         app: auth-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "6000"
+        prometheus.io/path: "/actuator/prometheus"
     spec:
       containers:
-        - name: user-service
+        - name: auth-service
           image: amtlh/auth-service:1.0.0
           imagePullPolicy: "IfNotPresent"
           ports:
-            - containerPort: 1000
+            - containerPort: 6000
           env:
             - name: spring.cloud.consul.host
               value: "$(CONSUL_SERVER_SVC_SERVICE_HOST)"

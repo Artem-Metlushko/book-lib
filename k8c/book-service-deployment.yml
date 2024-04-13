@@ -7,13 +7,12 @@ metadata:
     name: book-service
 spec:
   ports:
-    - nodePort: 30163
-      port: 8080
+    - protocol: TCP
+      name: http-traffic
+      port: 7000
       targetPort: 7000
-      protocol: TCP
   selector:
     app: book-service
-  type: NodePort
 ---
 
 apiVersion: apps/v1
@@ -22,6 +21,7 @@ metadata:
   name: book-service
   namespace: default
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: book-service
@@ -29,8 +29,10 @@ spec:
     metadata:
       labels:
         app: book-service
-#      annotations:
-#        'consul.hashicorp.com/connect-inject': 'true'
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "7000"
+        prometheus.io/path: "/actuator/prometheus"
     spec:
       containers:
         - name: book-service

@@ -1,4 +1,5 @@
-
+docker context use default
+eval $(minikube -p minikube docker-env --shell=bash)
 #mail-service
 
   #app
@@ -11,15 +12,10 @@ kubectl delete deploy mail
 kubectl delete svc maile
 
 minikube image rm amtlh/mail:1.0.0 --force
-minikube image load amtlh/mail:1.0.0
 minikube image ls
 kubectl apply -f ./k8c/mail-service-deployment.yml
 
-#minikube image load postgres
-#minikube image load mongo
 
-kubectl get all
-minikube dashboard
 
 #docker push amtlh/book-service:1.0.0
 
