@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: mail-service
+  kafka:
+    bootstrap-servers: kafka-service:9092
+    consumer:
+      group-id: "mail-task"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  prometheus:
+    metrics:
+      export:
+        enabled: true

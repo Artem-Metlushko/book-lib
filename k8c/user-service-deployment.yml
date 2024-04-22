@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: default
+  labels:
+    name: user-service
+spec:
+  ports:
+    - nodePort: 30164
+      port: 1000
+      targetPort: 1000
+      protocol: TCP
+  selector:
+    app: user-service
+  type: NodePort
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "1000"
+        prometheus.io/path: "/actuator/prometheus"
+    spec:
+      containers:
+        - name: user-service
+          image: amtlh/user-service:1.0.0
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 1000
+          env:
+            - name: spring.cloud.consul.host
+              value: "$(CONSUL_SERVER_SVC_SERVICE_HOST)"
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: postgres_user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: postgres_password
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: user-postgres-db-name
+            - name: POSTGRES_USER_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: user-postgres-db-host
+

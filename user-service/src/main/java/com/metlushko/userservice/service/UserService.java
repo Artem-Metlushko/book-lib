@@ -17,7 +17,6 @@ public class UserService {
     private final ApiClient apiClient;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-
     private final ProducerService producerService;
 
     public User saveUser(User user) {
@@ -27,9 +26,6 @@ public class UserService {
 
         return createdUser;
     }
-
-
-
 
     public ResponseDto getUser(Long id) throws Exception {
         ResponseDto responseDto = new ResponseDto();

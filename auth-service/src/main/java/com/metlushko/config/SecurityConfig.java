@@ -44,6 +44,7 @@ public class SecurityConfig {
                          authorize
                                  .requestMatchers("/api/auth/**").permitAll()
                                  .requestMatchers("/actuator/health").permitAll()
+                                 .requestMatchers("/actuator/prometheus").permitAll()
                                  .requestMatchers("/register").permitAll()
                                  .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());

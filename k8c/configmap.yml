@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap
+data:
+  book-postgres-db-host: postgres-book
+  book-postgres-db-name: book_db
+  book-mongo-db-host: mongo-img-service
+  book-mongo-db-name: Book
+  discovery-service-host: consul-service
+  discovery-service-port: "8500"
+  user-postgres-db-host: postgres-userdb
+  user-postgres-db-name: userdb_db
+  application.yml: |-
+    spring:
+      cloud:
+        gateway:
+          discovery:
+            locator:
+              enabled: true
+      routes:
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/v1/users/**
+          filters:
+            - AuthFilter
+
+        #          filters:
+        #            - name: CircuitBreaker
+        #              args:
+        #                name: userServiceCB
+        #                fallbackUri: forward:/fallback/user-service
+
+        - id: book-service
+          uri: lb://book-service
+          predicates:
+            - Path=/api/v1/books/**
+          filters:
+            - AuthFilter
+
+        - id: auth-server
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - AuthFilter
+
+
