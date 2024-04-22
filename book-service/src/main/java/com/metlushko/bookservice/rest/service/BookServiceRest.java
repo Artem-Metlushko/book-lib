@@ -8,8 +8,6 @@ import com.metlushko.bookservice.rest.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,7 +29,8 @@ public class BookServiceRest {
 
     public List<BookResponseDto> getAllBooks() {
 
-        return bookRepository.findAll(PageRequest.of(1, 2, Sort.by("id")))
+//        return bookRepository.findAll(PageRequest.of(1, 2, Sort.by("id")))
+        return bookRepository.findAll()
                 .stream()
                 .map(bookMapper::toBookResponseDto)
                 .toList();

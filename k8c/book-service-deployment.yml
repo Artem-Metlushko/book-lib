@@ -1,0 +1,85 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: book-service
+  namespace: default
+  labels:
+    name: book-service
+spec:
+  ports:
+    - protocol: TCP
+      name: http-traffic
+      port: 7000
+      targetPort: 7000
+  selector:
+    app: book-service
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book-service
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: book-service
+  template:
+    metadata:
+      labels:
+        app: book-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "7000"
+        prometheus.io/path: "/actuator/prometheus"
+    spec:
+      containers:
+        - name: book-service
+          image: amtlh/book-service:1.0.0
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 7000
+          env:
+            - name: spring.cloud.consul.host
+              value: "$(CONSUL_SERVER_SVC_SERVICE_HOST)"
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: book-postgres-db-host
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: book-postgres-db-name
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: postgres_user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: postgres_password
+            - name: MONGO_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: book-mongo-db-name
+            - name: MONGO_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: book-mongo-db-host
+            - name: DISCOVERY_SERVICE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: discovery-service-host
+            - name: DISCOVERY_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: discovery-service-port

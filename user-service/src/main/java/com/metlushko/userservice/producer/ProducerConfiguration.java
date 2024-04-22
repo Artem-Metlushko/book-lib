@@ -20,7 +20,6 @@ public class ProducerConfiguration {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-
     @Bean
     public ProducerFactory<String, UserDto> jsonProducerFactory() {
 

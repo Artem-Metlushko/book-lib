@@ -1,0 +1,82 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-userdb
+  labels:
+    app: postgres-userdb
+    tier: database-userdb
+spec:
+  ports:
+    - port: 5432
+  selector:
+    app: postgres-userdb
+    tier: database-userdb
+  clusterIP: None
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pv-claim-userdb
+  labels:
+    app: postgres-userdb
+    tier: database-userdb
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-userdb
+  labels:
+    app: postgres-userdb
+    tier: database-userdb
+
+spec:
+  selector:
+    matchLabels:
+      app: postgres-userdb
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: postgres-userdb
+        tier: database-userdb
+
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16.2
+          imagePullPolicy: "IfNotPresent"
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: postgres_user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: postgres_password
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: user-postgres-db-name
+          ports:
+            - containerPort: 5432
+              name: postgres-userdb
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-persistance-userdb
+      volumes:
+        - name: postgres-persistance-userdb
+          persistentVolumeClaim:
+            claimName: postgres-pv-claim-userdb
